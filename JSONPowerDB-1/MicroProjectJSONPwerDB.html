@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Enrollment Form</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://login2explore.com/jpdb/resources/js/0.0.4/jpdb-commons.js"></script>
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+    .jumbotron {
+      background-color: #337ab7;
+      color: #fff;
+      padding: 20px;
+      margin-bottom: 0;
+      text-align: center;
+    }
+    h1 {
+      font-size: 36px;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      font-weight: bold;
+    }
+    .form-control {
+      border-radius: 3px;
+    }
+    .btn-primary {
+      background-color: #337ab7;
+      border-color: #337ab7;
+    }
+    .btn-primary:hover {
+      background-color: #286090;
+      border-color: #286090;
+    }
+  </style>
+</head>
+<body>
+  <div class="jumbotron">
+    <h1>Student Enrollment Form</h1>
+  </div>
+  <div class="container">
+    <form id="enrollmentForm" method="get">
+      <div class="form-group">
+        <label for="RollNo">Roll No:</label>
+        <input type="text" class="form-control" name="RollNo" id="RollNo" placeholder="Enter Roll No" onchange="getEnroll()">
+      </div>
+      <div class="form-group">
+        <label for="FullName">Full Name:</label>
+        <input type="text" class="form-control" id="FullName" placeholder="Enter Full Name">
+      </div>
+      <div class="form-group">
+        <label for="Class">Class:</label>
+        <input type="text" class="form-control" id="Class" placeholder="Enter Class">
+      </div>
+      <div class="form-group">
+        <label for="BirthDate">Birth Date:</label>
+        <input type="date" class="form-control" id="BirthDate" placeholder="Enter Birth Date">
+      </div>
+      <div class="form-group">
+        <label for="Address">Address:</label>
+        <input type="text" class="form-control" id="Address" placeholder="Enter Address">
+      </div>
+      <div class="form-group">
+        <label for="EnrollmentDate">Enrollment Date:</label>
+        <input type="date" class="form-control" id="EnrollmentDate" placeholder="Enter Enrollment Date">
+      </div>
+      <div class="form-group">
+        <button type="button" class="btn btn-lg btn-primary" id="EnrollmentSave" onclick="SaveEnrollment()" disabled>Save</button>
+        <button type="button" class="btn btn-lg btn-primary" id="EnrollmentUpdate" onclick="UpdateEnrollment()" disabled>Update</button>
+        <button type="button" class="btn btn-lg btn-primary" id="EnrollmentReset" onclick="ResetEnrollment()" disabled>Reset</button>
+      </div>
+    </form>
+  </div>
+
+    <script>
+      var jpdbBaseURL = "http://api.login2explore.com:5577";
+      var jpdbIRL = "/api/irl";
+      var jpdbiml = "/api/iml";
+      var empDBName = "EMP-DB";
+      var empRelationName = "Emp-Data";
+      var connTaken = "90933130|-31949318504098347|90951326";
+
+        $("#RollNo").focus();
+
+        function validateAndGetFormData()
+        {
+            var RollNo = $("#RollNo").val();
+            if(RollNo === "")
+            {
+                alert("Roll No is Required");
+                $("#RollNo").focus();
+                return "";
+            }
+
+            var FullName = $("#FullName").val();
+            if(FullName === "")
+            {
+                alert("Full Name is Required");
+                $("#FullName").focus();
+                return "";
+            }
+
+            var Class = $("#Class").val();
+            if(Class === "")
+            {
+                alert("Class is Required");
+                $("#Class").focus();
+                return "";
+            }
+
+            var BirthDate = $("#BirthDate").val();
+            if(BirthDate === "")
+            {
+                alert("Birth Date is Required");
+                $("#BirthDate").focus();
+                return "";
+            }
+
+            var Address = $("#Address").val();
+            if(Address === "")
+            {
+                alert("Address is Required");
+                $("#Address").focus();
+                return "";
+            }
+
+            var EnrollmentDate = $("#EnrollmentDate").val();
+            if(EnrollmentDate === "")
+            {
+                alert("Enrollment Date is Required");
+                $("#EnrollmentDate").focus();
+                return "";
+            }
+
+            var jsonStrObj = 
+            {
+                RollNo : RollNo,
+                FullName : FullName,
+                Class : Class,
+                BirthDate : BirthDate,
+                Address : Address,
+                EnrollmentDate : EnrollmentDate,
+            };
+
+            return JSON.stringify(jsonStrObj);
+        } 
+
+        function ResetEnrollment()
+        {
+            $("#RollNo").val("");
+            $("#FullName").val("");
+            $("#Class").val("");
+            $("#BirthDate").val("");
+            $("#Address").val("");
+            $("#EnrollmentDate").val("");
+            $("#RollNo").prop("disabled", false);
+            $("#EnrollmentSave").prop("disabled", true);
+            $("#EnrollmentUpdate").prop("disabled", true);
+            $("#EnrollmentReset").prop("disabled", true);
+            $("#RollNo").focus();
+        }
+
+        function getRollIdAsJsonObj()
+        {
+            var RNO = $("#RollNo").val();
+            var jsObj = 
+            {
+                RollNo : RNO
+            };
+      
+            return JSON.stringify(jsObj);
+
+        }
+
+        function saveRecNo2LS(jsonObj)
+        {
+            var lvData = JSON.parse(jsonObj.data);
+            localStorage.setItem("recno", lvData.rec_no);
+        }
+
+        function fillData(jsonObj)
+        {
+            saveRecNo2LS(jsonObj);
+            var record = JSON.parse(jsonObj.data).record;
+            $("#FullName").val(record.FullName);
+            $("#Class").val(record.Class);
+            $("#BirthDate").val(record.BirthDate);
+            $("#Address").val(record.Address);
+            $("#EnrollmentDate").val(record.EnrollmentDate);
+        }
+
+        function getEnroll()
+        {
+            var rollJsonObj = getRollIdAsJsonObj();
+            var getRequest = createGET_BY_KEYRequest(connTaken, empDBName, empRelationName, rollJsonObj);
+            alert(getRequest);
+
+            jQuery.ajaxSetup({ async: false });
+            var resultObj = executeCommandAtGivenBaseUrl(getRequest, jpdbBaseURL, jpdbIRL);
+            alert(resultObj);
+            jQuery.ajaxSetup({ async: true });
+
+            if(resultObj.status === 400)
+            {
+                $("#EnrollmentReset").prop("disabled", false);
+                $("#EnrollmentSave").prop("disabled", false);
+                $("#FullName").focus();
+            }
+            else if(resultObj.status === 200)
+            {
+                $("#RollNo").prop("disabled", true);
+
+                fillData(resultObj);
+
+                $("#EnrollmentUpdate").prop("disabled", false);
+                $("#EnrollmentReset").prop("disabled", false);
+                $("#FullName").focus();
+            }
+
+        }
+
+        function SaveEnrollment()
+        {
+            var jsonStr = validateAndGetFormData();
+            if(jsonStr === "")
+            {
+                return;
+            }
+
+            var putReqStr =  createPUTRequest(connTaken, jsonStr, empDBName, empRelationName);
+            alert(putReqStr);
+
+            jQuery.ajaxSetup({ async: false });
+            var resultObj = executeCommandAtGivenBaseUrl(putReqStr, jpdbBaseURL, jpdbiml);
+            jQuery.ajaxSetup({ async: true });
+
+            ResetEnrollment();
+
+            $("#RollNo").focus();
+        } 
+
+        function UpdateEnrollment()
+        {
+            $("#EnrollmentUpdate").prop("disabled", true);
+
+            var jsonUp = validateAndGetFormData();
+
+            var UpdateReq = createUPDATERecordRequest(connTaken, jsonUp, empDBName, empRelationName, localStorage.getItem("recno"));
+            alert(UpdateReq);
+
+            jQuery.ajaxSetup({ async: false });
+            var resultObj = executeCommandAtGivenBaseUrl(UpdateReq, jpdbBaseURL, jpdbiml);
+            jQuery.ajaxSetup({ async: true });
+
+            console.log(resultObj);
+
+            ResetEnrollment();
+
+            $("#RollNo").focus();
+        }
+    </script>
+</body>
+</html>
+
