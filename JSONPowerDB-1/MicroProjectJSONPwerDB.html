@@ -10,12 +10,13 @@
   <script type="text/javascript" src="https://login2explore.com/jpdb/resources/js/0.0.4/jpdb-commons.js"></script>
   <style>
     body {
-      background-color: #f5f5f5;
+      background-color: #797777;
+      color: #ffffff;
       font-family: Arial, sans-serif;
     }
     .jumbotron {
-      background-color: #337ab7;
-      color: #fff;
+      background-color: #b7ae33;
+      color: #ffffff;
       padding: 20px;
       margin-bottom: 0;
       text-align: center;
@@ -26,7 +27,7 @@
       margin-bottom: 15px;
     }
     .container {
-      background-color: #fff;
+      background-color: #2e2424;
       padding: 20px;
       margin-top: 20px;
       border-radius: 5px;
@@ -48,7 +49,7 @@
     }
   </style>
 </head>
-<body>
+<body> <!--Main body where the input is asked-->
   <div class="jumbotron">
     <h1>Student Enrollment Form</h1>
   </div>
@@ -56,7 +57,7 @@
     <form id="enrollmentForm" method="get">
       <div class="form-group">
         <label for="RollNo">Roll No:</label>
-        <input type="text" class="form-control" name="RollNo" id="RollNo" placeholder="Enter Roll No" onchange="getEnroll()">
+        <input type="text" class="form-control" name="RollNo" id="RollNo" placeholder="Enter Roll No" onchange="getEnroll()"> <!--when moved to the next field a "getEnroll()" is initiated-->
       </div>
       <div class="form-group">
         <label for="FullName">Full Name:</label>
@@ -96,7 +97,7 @@
 
         $("#RollNo").focus();
 
-        function validateAndGetFormData()
+        function validateAndGetFormData() // Validates form by the input given by the user
         {
             var RollNo = $("#RollNo").val();
             if(RollNo === "")
@@ -159,7 +160,7 @@
             return JSON.stringify(jsonStrObj);
         } 
 
-        function ResetEnrollment()
+        function ResetEnrollment() // Resets form when reset but is clicked
         {
             $("#RollNo").val("");
             $("#FullName").val("");
@@ -174,7 +175,7 @@
             $("#RollNo").focus();
         }
 
-        function getRollIdAsJsonObj()
+        function getRollIdAsJsonObj() //stringifies the Roll No acting as a primary key and returns
         {
             var RNO = $("#RollNo").val();
             var jsObj = 
@@ -186,13 +187,13 @@
 
         }
 
-        function saveRecNo2LS(jsonObj)
+        function saveRecNo2LS(jsonObj) // gives the record No corresponding to a roll No
         {
             var lvData = JSON.parse(jsonObj.data);
             localStorage.setItem("recno", lvData.rec_no);
         }
 
-        function fillData(jsonObj)
+        function fillData(jsonObj) // saves record
         {
             saveRecNo2LS(jsonObj);
             var record = JSON.parse(jsonObj.data).record;
@@ -205,26 +206,24 @@
 
         function getEnroll()
         {
-            var rollJsonObj = getRollIdAsJsonObj();
+            var rollJsonObj = getRollIdAsJsonObj(); // Gets the Roll No
             var getRequest = createGET_BY_KEYRequest(connTaken, empDBName, empRelationName, rollJsonObj);
-            alert(getRequest);
 
             jQuery.ajaxSetup({ async: false });
             var resultObj = executeCommandAtGivenBaseUrl(getRequest, jpdbBaseURL, jpdbIRL);
-            alert(resultObj);
             jQuery.ajaxSetup({ async: true });
 
-            if(resultObj.status === 400)
+            if(resultObj.status === 400) // if the Roll No is Not Present In the database the below sataement is executed
             {
                 $("#EnrollmentReset").prop("disabled", false);
                 $("#EnrollmentSave").prop("disabled", false);
                 $("#FullName").focus();
             }
-            else if(resultObj.status === 200)
+            else if(resultObj.status === 200) // if the Roll No is present in the data the  below statement is executed
             {
                 $("#RollNo").prop("disabled", true);
 
-                fillData(resultObj);
+                fillData(resultObj); // calls filldata
 
                 $("#EnrollmentUpdate").prop("disabled", false);
                 $("#EnrollmentReset").prop("disabled", false);
@@ -233,16 +232,16 @@
 
         }
 
-        function SaveEnrollment()
+        function SaveEnrollment() // when Save Button is Clicked
         {
-            var jsonStr = validateAndGetFormData();
+            var jsonStr = validateAndGetFormData(); // Gets the Record which is eneterd
             if(jsonStr === "")
             {
                 return;
             }
 
-            var putReqStr =  createPUTRequest(connTaken, jsonStr, empDBName, empRelationName);
-            alert(putReqStr);
+            var putReqStr =  createPUTRequest(connTaken, jsonStr, empDBName, empRelationName); // A "PUT" request is created to the data base
+            alert("New data has been saved");
 
             jQuery.ajaxSetup({ async: false });
             var resultObj = executeCommandAtGivenBaseUrl(putReqStr, jpdbBaseURL, jpdbiml);
@@ -253,14 +252,14 @@
             $("#RollNo").focus();
         } 
 
-        function UpdateEnrollment()
+        function UpdateEnrollment() // when Update Button is Clicked
         {
             $("#EnrollmentUpdate").prop("disabled", true);
 
             var jsonUp = validateAndGetFormData();
 
-            var UpdateReq = createUPDATERecordRequest(connTaken, jsonUp, empDBName, empRelationName, localStorage.getItem("recno"));
-            alert(UpdateReq);
+            var UpdateReq = createUPDATERecordRequest(connTaken, jsonUp, empDBName, empRelationName, localStorage.getItem("recno")); // A "UPDATE" Request is made with last element being the record No
+            alert("Updating existing Record");
 
             jQuery.ajaxSetup({ async: false });
             var resultObj = executeCommandAtGivenBaseUrl(UpdateReq, jpdbBaseURL, jpdbiml);
