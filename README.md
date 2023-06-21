@@ -28,7 +28,6 @@ Version 1.0.0: Initial release of the Student Enrollment Form with JsonPowerDB i
  4. Release History
  5. Additional Sections
    * Table of Contents
-   * Illustrations
    * Scope of Functionalities
    * Examples of Use
    * Project Status
