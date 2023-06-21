@@ -1,5 +1,18 @@
 # JSONPowerDB
 
+## Table of Contents
+
+  1. Title of the Project
+  2. Description
+  3. Benefits of using JsonPowerDB
+  4. Release History
+  5. Additional Sections
+   * Table of Contents
+   * Scope of Functionalities
+   * Examples of Use
+   * Project Status
+   * Sources
+
 ## Title of the Project
 
 * Student Enrollment Form with JsonPowerDB Integration
@@ -19,19 +32,6 @@
 ## Release History
 
 Version 1.0.0: Initial release of the Student Enrollment Form with JsonPowerDB integration.
-
-## Table of Contents
-
- 1. Title of the Project
- 2. Description
- 3. Benefits of using JsonPowerDB
- 4. Release History
- 5. Additional Sections
-   * Table of Contents
-   * Scope of Functionalities
-   * Examples of Use
-   * Project Status
-   * Sources
 
 ## Scope of Functionalities
 
